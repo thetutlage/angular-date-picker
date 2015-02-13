@@ -12,7 +12,7 @@ Angular datepicker is a light weight datepicker under `1K` with only dependencie
 
 ### Install 
 
-`bower install angular-date-picker`
+`bower install angular-pikaday-picker`
 
 ### Setting up
 
