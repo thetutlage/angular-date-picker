@@ -1,60 +1,83 @@
-! function(e) {
-    e.module("angular.datepicker", []).service("Pikaday", ["$window", function(e) {
-        var t = e.Pikaday;
-        return delete e.Pikaday, t
-    }]).directive("pickaDay", ["Pikaday", function(e) {
-        return {
-            restrict: "A",
-            scope: {
-                format: "@",
-                minDate: "@",
-                maxDate: "@",
-                disableWeekends: "@",
-                yearRange: "@",
-                defaultDate: "@",
-                onSelect: "=",
-                onOpen: "=",
-                onClose: "=",
-                onDraw: "="
-            },
-            link: function(t, n) {
-                var a = null;
-                t.$watchGroup(["format", "minDate", "maxDate", "disableWeekends", "yearRange", "defaultDate"], function() {
-                    a && a.destroy();
-                    var o = new Date,
-                        i = t.format || "YYYY-MM-D",
-                        f = "undefined" != typeof t.defaultDate ? new Date(t.defaultDate) : !1,
-                        r = "undefined" != typeof t.minDate ? new Date(t.minDate) : !1,
-                        d = "undefined" != typeof t.maxDate ? new Date(t.maxDate) : !1,
-                        u = !!t.disableWeekends || !1,
-                        l = t.yearRange || [2e3, o.getFullYear()];
-                    a = new e({
-                        field: n[0],
-                        format: i,
-                        minDate: r,
-                        maxDate: d,
-                        numberOfMonths: 3,
-                        setDefaultDate: !0,
-                        defaultDate: f,
-                        disableWeekends: u,
-                        yearRange: l,
-                        onSelect: function() {
-                            t.onSelect && "function" == typeof t.onSelect && t.onSelect(this.getMoment().format(i), this.getMoment())
-                        },
-                        onOpen: function() {
-                            t.onOpen && "function" == typeof t.onOpen && t.onOpen(this.getMoment().format(i), this.getMoment())
-                        },
-                        onClose: function() {
-                            t.onClose && "function" == typeof t.onClose && t.onClose(this.getMoment().format(i), this.getMoment())
-                        },
-                        onDraw: function() {
-                            t.onDraw && "function" == typeof t.onDraw && t.onDraw(this.getMoment().format(i), this.getMoment())
-                        }
-                    })
-                }), t.$on("$destroy", function() {
-                    a.destroy()
-                })
-            }
-        }
-    }])
-}(angular);
+
+(function (root, factory)
+{
+    'use strict';
+    var Pikaday;
+    if (typeof exports === 'object') {
+        // CommonJS module
+        // Load pickaday as an optional dependency
+        try { Pikaday = require('pikaday'); } catch (e) {}
+        module.exports = factory(Pikaday);
+    } else if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(function (req)
+        {
+            // Load pickaday as an optional dependency
+            var id = 'pikaday';
+            try { Pikaday = req(id); } catch (e) {}
+            return factory(Pikaday);
+        });
+    } else {
+        root.Pikaday = factory(root.Pikaday);
+    }
+}(this, function (Pikaday){
+  angular.module("angular.datepicker", [])
+  .directive("pickaDay",function() {
+      return {
+          restrict: "A",
+          scope: {
+              format: "@",
+              minDate: "@",
+              maxDate: "@",
+              disableWeekends: "@",
+              yearRange: "@",
+              defaultDate: "@",
+              onSelect: "=",
+              onOpen: "=",
+              onClose: "=",
+              onDraw: "="
+          },
+          link: function($scope, $elem) {
+              var picker = null;
+              $scope.$watchGroup(["format", "minDate", "maxDate", "disableWeekends", "yearRange", "defaultDate"], function() {
+                  if(picker){
+                      picker.destroy();
+                  }
+                  var date = new Date();
+                  format = $scope.format || "YYYY-MM-D",
+                  defaultDate = "undefined" != typeof $scope.defaultDate ? new Date($scope.defaultDate) : !1,
+                  minDate = "undefined" != typeof $scope.minDate ? new Date($scope.minDate) : !1,
+                  maxDate = "undefined" != typeof $scope.maxDate ? new Date($scope.maxDate) : !1,
+                  disableWeekends = !!$scope.disableWeekends || !1,
+                  yearRange = $scope.yearRange || [1990, date.getFullYear()];
+
+                  picker = new Pikaday({
+                      field: $elem[0],
+                      format: format,
+                      minDate: minDate,
+                      maxDate: maxDate,
+                      numberOfMonths: 3,
+                      setDefaultDate: true,
+                      defaultDate: defaultDate,
+                      disableWeekends: disableWeekends,
+                      yearRange: yearRange,
+                      onSelect: function() {
+                          $scope.onSelect && "function" == typeof $scope.onSelect && $scope.onSelect(this.getMoment().format(format), this.getMoment())
+                      },
+                      onOpen: function() {
+                          $scope.onOpen && "function" == typeof $scope.onOpen && $scope.onOpen(this.getMoment().format(format), this.getMoment())
+                      },
+                      onClose: function() {
+                          $scope.onClose && "function" == typeof $scope.onClose && $scope.onClose(this.getMoment().format(format), this.getMoment())
+                      },
+                      onDraw: function() {
+                          $scope.onDraw && "function" == typeof $scope.onDraw && $scope.onDraw(this.getMoment().format(format), this.getMoment())
+                      }
+                  })
+              }), $scope.$on("$destroy", function() {
+                  picker.destroy();
+              })
+          }
+      }
+})
+}));
