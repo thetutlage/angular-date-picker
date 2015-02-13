@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="bower_components/pikaday/css/pikaday.css">
+</head>
+<body>
+
+<div ng-controller="home">
+	<label>
+		From Date:
+		<br />
+		<input type="text" id="datepicker" picka-day format="MM-D-YYYY" disable-weekends=true default-date="2015-02-11" min-date="2015-02-10"  max-date="{{maxDate}}" ng-model="date.from_date"  />
+	</label>
+	<br />
+	<span>{{date.from_date}}</span>
+
+	<br /><br /><br />
+
+	<label>
+		To Date:
+		<br />
+		<input type="text" id="datepicker" picka-day format="MM-D-YYYY" disable-weekends=true default-date="2015-02-11" min-date="2015-02-10" ng-model="date.to_date" />
+	</label>
+	<br />
+	<span>{{date.to_date}}</span>
+
+
+	<br />
+	<input type="text" picka-day default-date="2015-02-11" />
+
+</div>	
+	<script type="text/javascript" src="bower_components/angular/angular.js"></script>
+	<script type="text/javascript" src="bower_components/moment/min/moment.min.js"></script>
+	<script type="text/javascript" src="bower_components/pikaday/pikaday.js"></script>	
+	<script type="text/javascript" src="angular-date-picker.js"></script>	
+
+	<script type="text/javascript">
+
+		var app = angular.module('app',['angular.datepicker']);
+
+		app.controller('home',function($scope,$timeout){
+
+			$scope.getDate = function(date,raw){
+
+				console.log(date);
+
+				console.log(raw);
+
+			}
+			$timeout(function(){
+				$scope.maxDate = '2015-02-20';
+			},3000);
+		});
+
+
+	</script>
+
+</body>
+</html>
