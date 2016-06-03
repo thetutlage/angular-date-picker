@@ -29,6 +29,7 @@
               format: "@",
               minDate: "@",
               maxDate: "@",
+              numberOfMonths: "@",
               disableWeekends: "@",
               yearRange: "@",
               defaultDate: "@",
@@ -39,7 +40,7 @@
           },
           link: function($scope, $elem) {
               var picker = null;
-              $scope.$watchGroup(["format", "minDate", "maxDate", "disableWeekends", "yearRange", "defaultDate"], function() {
+              $scope.$watchGroup(["format", "minDate", "maxDate", "numberOfMonths", "disableWeekends", "yearRange", "defaultDate"], function() {
                   if(picker){
                       picker.destroy();
                   }
@@ -48,6 +49,7 @@
                   defaultDate = "undefined" != typeof $scope.defaultDate ? new Date($scope.defaultDate) : !1,
                   minDate = "undefined" != typeof $scope.minDate ? new Date($scope.minDate) : !1,
                   maxDate = "undefined" != typeof $scope.maxDate ? new Date($scope.maxDate) : !1,
+                  numberOfMonths = $scope.numberOfMonths || 3,
                   disableWeekends = !!$scope.disableWeekends || !1,
                   yearRange = $scope.yearRange || [1990, date.getFullYear()];
 
@@ -56,7 +58,7 @@
                       format: format,
                       minDate: minDate,
                       maxDate: maxDate,
-                      numberOfMonths: 3,
+                      numberOfMonths: numberOfMonths,
                       setDefaultDate: true,
                       defaultDate: defaultDate,
                       disableWeekends: disableWeekends,
